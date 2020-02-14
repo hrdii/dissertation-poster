@@ -11,23 +11,36 @@ author:
 affiliation:
   - num: 1
     address: Pardee RAND Graduate School, Santa Monica CA  
-main_findings:
-  - "**Cities** as Transient Destinations: Modeling Implications of **Climate Change** on **Seasonal Migrants** in India"
+main_findings: "**Cities** as Transient Destinations: Implications of **Climate Change** on **Seasonal Migrants** in **India**"
 main_fontfamily: "Roboto"  
-logoright_name: ./images/logo-pardee-rand.svg
+logoright_name: ./images/Capture.PNG
 primary_colour: "#4B197C"
-secondary_colour: "4B197C"
+secondary_colour: "#4B197C"
 accent_colour: "#D1A021"
 output: 
   posterdown::posterdown_betterport:
     self_contained: false
     pandoc_args: --mathjax
     number_sections: false
-bibliography: packages.bib
+bibliography: reference.bib
 link-citations: true
 ---
 
-```{r, include=FALSE}
+```{r setup, include=FALSE}
+## Clear Environment
+rm(list = ls())
+## Load Libraries
+library(ggplot2)
+library(cowplot)
+library(scales)
+library(knitr)
+library(magrittr)
+library(readxl)
+library(tidygeocoder)
+library(leaflet)
+library(sp)
+library(rgeos)
+## Set Environment Options 
 knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       tidy = FALSE,
@@ -35,72 +48,182 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.align = 'center',
                       out.width = "100%")
 options(knitr.table.format = "html") 
+## write the bibligraphy 
+knitr::write_bib(c(.packages(), 'posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+# merge the other references and the packages references
+cat(paste("% Automatically generated", Sys.time()), "\n% DO NOT EDIT",
+    { readLines("biblo.bib") %>% 
+      paste(collapse = "\n") },
+    { readLines("packages.bib") %>% 
+      paste(collapse = "\n") },
+    file = "reference.bib",
+    sep = "\n")
+## Include in nocite
 ```
+
+---
+nocite: |
+  @R-base, @R-cowplot, @R-ggplot2, @R-knitr,@R-magrittr, @R-pagedown, @R-posterdown, @R-rmarkdown, @R-scales
+---
 
 # Introduction
 
-This is the `posterdown_betterport` template for the {posterdown} package! I was inspired by the twitter thread of [Mike Morrison](https://mobile.twitter.com/mikemorrison/status/1110191245035479041) and wanted to apply the `#betterposter` concept to the reproducible (yet simple to use) functionality of the {posterdown} package [@R-posterdown]. If you're not an R user don't sweat as you do **NOT** need to use it at all! Feel free to use only the Markdown functionality of this package :)
+Every year millions of workers in India migrate for a few months within the country looking for work. A push factor driving this migration is rural economic distress [@breman1978seasonal]. Whereas pull factors include the desire to experience a more *urban* lifestyle [@deshingkar2017towards]. Keshri and Bhagat show that seasonal migrants are more likely to belong to marginaized groups [-@keshri2012]. 
 
-```{r, include=FALSE}
-knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+# Why Do I Care?  
+
+1. Marginalized & more vulnerable to effects of Climate Change
+2. Drivers economic growth of destination cities
+3. Severly undercounted & absent from policy discourse
+
+Figures \@ref(fig:genderfigure) & \@ref(fig:marginfigure) show the charateristics of the seasonal migrant population based on National Sample Survey Office data collected in 2007-08 
+```{r, genderfigure, fig.cap= "Majority of Seasonal Migrants are men migrating from rural areas to urban areas."}
+## Data from Keshri Paper
+A <- matrix(c(0.67, 0.25, 0.4, 0.52), 2, 2)
+B <- c(0.63, 0.29)
+sol <- solve(A, B)
+
+## Create Dataframe
+df1 <- data.frame(gender = sort(rep(c("Male", "Female"),4)),
+                  migration = rep(c("uu", "ur", "ru", "rr"),2))
+df1$migration <- factor(df1$migration, levels = c("ru", "rr", "ur", "uu"))
+df1$percent <- c(5, 3, 40, 52, 5, 2, 67, 25)/100
+df1$pop <- sol[1]
+df1[df1$gender == "Female", "pop"] <- df1[df1$gender == "Female", "pop"]*sol[2]
+
+## Create Color Palette
+cols <- colorRampPalette(c("#4B197C", "#D1A021"))(4)
+
+## Plot
+ggplot(df1, 
+       mapping = aes(x = gender, y = percent, fill = migration, width = pop))+
+  geom_bar(stat = "identity", position = "stack")+
+  scale_fill_manual(name = "Type of Migration",
+                    breaks = c("ru", "rr", "ur", "uu"),
+                    values = c("ru" = cols[4], 
+                               "rr" = cols[3], 
+                               "ur" = cols[2], 
+                               "uu" = cols[1]),
+                    labels = c("uu" = "Urban to urban", 
+                               "ur" = "Urban to rural", 
+                               "rr" = "Rural to rural", 
+                               "ru" = "Rural to urban"))+
+  scale_y_continuous(name = "", 
+                     labels = scales::percent,
+                     minor_breaks = FALSE)+xlab("")+theme_bw()
+```
+```{r, marginfigure, fig.height=6, fig.cap= "Migration rates are higher marginalized and/or vulnerable groups"}
+## Create Dataframes based on Keshri Paper
+## Economic Quintiles
+df2 <- data.frame(x =c("Lowest", "Lower", "Medium", "Higher", "Highest"),
+                  y = c(40.6, 25.6, 17.0, 10.2, 5.8))
+## Educational Attainment
+df3 <- data.frame(x = c("Below Primary", "Primary or middle", "High School", "Some College or above"),
+                  y = c(25.7, 22.1, 11.1, 8.3))
+## Marginalized Social Group
+df4 <- data.frame(x = c("Scheduled Tribe", "Scheduled Caste", "Other Backward Classes", "Others"),
+                  y = c(45.2, 24.8, 19.5, 12.2))
+
+## Create Color Palette
+cols <- colorRampPalette(c("#4B197C", "#D1A021"))(4)
+cols2 <- colorRampPalette(c("#4B197C", "#D1A021"))(5)
+
+## Economic Quintiles Plot
+p2 <- ggplot(df2, 
+             mapping = aes(x = x, y = y, fill = x))+
+  geom_bar(stat = "identity")+
+  coord_flip()+
+  theme_bw()+theme(legend.position = "none")+
+  ggtitle("Economic Quintiles")+
+  scale_fill_manual(name = "",
+                    breaks = c("Lowest", "Lower", "Medium", "Higher", "Highest"), 
+                    values = c("Lowest" = cols2[1], 
+                               "Lower" = cols2[2], 
+                               "Medium" = cols2[3], 
+                               "Higher" = cols2[4], 
+                               "Highest" = cols2[5]))+
+  scale_y_continuous(name = "", limits = c(0, 50))+
+  scale_x_discrete(name = "",
+                   limits = c("Lowest", "Lower", "Medium", "Higher", "Highest"))
+
+## Educational Attainment Plot
+p3 <- ggplot(df3, 
+             mapping = aes(x = x, y = y, fill = x))+
+  geom_bar(stat = "identity")+
+  coord_flip()+
+  theme_bw()+theme(legend.position = "none")+
+  ggtitle("Educational Attainment")+
+  scale_fill_manual(name = "",
+                    breaks = c("Below Primary", "Primary or middle", "High School", "Some College or above"), 
+                    values = c("Below Primary" = cols[1], 
+                               "Primary or middle" = cols[2], 
+                               "High School" = cols[3], 
+                               "Some College or above" = cols[4]))+
+  scale_y_continuous(name = "", limits = c(0, 50))+
+  scale_x_discrete(name = "",
+                   limits = c("Below Primary", "Primary or middle", "High School", "Some College or above"))
+
+## Marginalized Social Group Plot
+p4 <- ggplot(df4, 
+             mapping = aes(x = x, y = y, fill = x))+
+  geom_bar(stat = "identity")+
+  coord_flip()+
+  theme_bw()+theme(legend.position = "none")+
+  ggtitle("Social Group")+
+  scale_fill_manual(name = "",
+                    breaks = c("Scheduled Tribe", "Scheduled Caste", "Other Backward Classes", "Others"), 
+                    values = c("Scheduled Tribe" = cols[1], 
+                               "Scheduled Caste" = cols[2], 
+                               "Other Backward Classes" = cols[3],
+                               "Others" = cols[4]))+
+  scale_y_continuous(name = "Migrants per 1000", limits = c(0, 50))+
+  scale_x_discrete(name = "",
+                   limits = c("Scheduled Tribe", "Scheduled Caste", "Other Backward Classes", "Others"))
+
+## Putting them together
+plot_grid(p2, p3, p4, nrow = 3, align = "v")
 ```
 
-## Objectives
+# Research Question  
 
-1. Pick a template layout.
-2. Write/ create your poster content distraction free.
-3. Let posterdown do its thing!
+1. Climate Change will lead to variability in weather patterns. How will seasonal migrantion patters adapt in response to uncertainity in the agrarian economy?  
+2. How will the pattern of urbanization change with change in migration patterns?
+3. What are the barriers seasonal migrants face to getting services when they migrate?
+4. What policy solutions will empower migrants to access their entitlements irrespective of their location?
 
 # Methods
 
-I will show here how to include poster elements that may be useful, such as an equation using mathjax:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vel orci porta non pulvinar. Aliquam purus sit amet luctus venenatis. Ridiculus mus mauris vitae ultricies leo integer malesuada nunc vel. Tristique sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula. Adipiscing tristique risus nec feugiat. Ridiculus mus mauris vitae ultricies leo integer. Condimentum lacinia quis vel eros donec. Odio euismod lacinia at quis risus sed vulputate. Donec adipiscing tristique risus nec feugiat in fermentum. Massa enim nec dui nunc mattis enim ut tellus. Ullamcorper morbi tincidunt ornare massa eget. Nec dui nunc mattis enim ut tellus elementum. Habitasse platea dictumst quisque sagittis purus sit. Libero id faucibus nisl tincidunt eget nullam non. Quis ipsum suspendisse ultrices gravida dictum fusce. Neque vitae tempus quam pellentesque nec nam. Diam phasellus vestibulum lorem sed risus ultricies tristique. Mattis nunc sed blandit libero volutpat sed cras ornare arcu.
 
-$$
-E = mc^2
-$$
+Aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus. Posuere lorem ipsum dolor sit. Vestibulum sed arcu non odio euismod lacinia. Amet massa vitae tortor condimentum lacinia quis. Ut venenatis tellus in metus. Varius morbi enim nunc faucibus a. Velit egestas dui id ornare arcu odio ut sem nulla. Massa vitae tortor condimentum lacinia quis vel eros donec ac. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Sit amet est placerat in egestas erat imperdiet sed. At consectetur lorem donec massa sapien.
 
-To reference a citation you can add your `.bib` file to the working directory and name it in the YAML metadata or generate an automated one as done here, then you only need to reference the label value in the `.bib` file. For example this package is built on top of the wonderful {pagedown} package and I will cite it at the end of this sentance using this in the rmd `[@R-pagedown]` [@R-pagedown].
+Iaculis at erat pellentesque adipiscing. Senectus et netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus est. Egestas dui id ornare arcu odio ut. Tristique magna sit amet purus gravida. Fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis. Amet commodo nulla facilisi nullam vehicula ipsum. Risus in hendrerit gravida rutrum quisque. Nulla posuere sollicitudin aliquam ultrices. Sed risus ultricies tristique nulla aliquet enim. Et molestie ac feugiat sed.
 
-To get a better understanding of how to include features like these please refer to the {posterdown} [wiki](https://github.com/posterdown/wiki).
+```{r, leafletmap, fig.cap="Source UN Population Division"}
+## Load data
+load("../Cities.RData")
 
-**_Now on to the results!_**
+cols3 <- colorRampPalette(c("#4B197C", "#D1A021"))(3)
+cities$size <- as.numeric(cities$mega)*5
+cities$color <- cols3[4 - as.numeric(cities$fast)]
 
-# Results
+## Conver to Spatial Dataframe
+cities <- SpatialPointsDataFrame(coords = cities[, c("long", "lat")], 
+                                 data = cities[, !{names(cities) %in% c("long", "lat")}],
+                                 proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
 
-Here you may have some figures to show off, bellow I have made a scatterplot with the infamous Iris dataset and I can even reference to the figure automatically like this, `Figure \@ref(fig:irisfigure)`, Figure \@ref(fig:irisfigure).
-
-```{r, irisfigure, fig.cap='Here is a caption for the figure. This can be added by using the "fig.cap" option in the r code chunk options, see this [link](https://yihui.name/knitr/options/#plots) from the legend himself, [Yihui Xie](https://twitter.com/xieyihui).', out.width="80%"}
-par(mar=c(2,2,0,1))
-plot(x = iris$Sepal.Length, y = iris$Sepal.Width,
-     col = iris$Species, pch = 19, xlab = "Sepal Length",
-     ylab = "Sepal Width")
+leaflet(width = 1000, height = 1000)%>%
+  addProviderTiles("Esri.WorldGrayCanvas")%>%
+  addCircleMarkers(data = cities,
+                   radius = ~size,
+                   color = ~color,
+                   popup = ~city_name,
+                   stroke = FALSE, 
+                   fillOpacity = 1)
 ```
 
-Maybe you want to show off some of that fancy code you spent so much time on to make that figure, well you can do that too! Just use the `echo=TRUE` option in the r code chunk options, Figure \@ref(fig:myprettycode)!
+Pulvinar mattis nunc sed blandit libero volutpat. Euismod in pellentesque massa placerat. Pellentesque sit amet porttitor eget. Vulputate ut pharetra sit amet aliquam id diam maecenas ultricies. Consectetur adipiscing elit duis tristique. Enim lobortis scelerisque fermentum dui faucibus in. Quis commodo odio aenean sed adipiscing. Vivamus at augue eget arcu dictum. Turpis cursus in hac habitasse. Vitae suscipit tellus mauris a diam maecenas. Tellus pellentesque eu tincidunt tortor. Molestie at elementum eu facilisis sed odio.
 
-```{r myprettycode, echo=TRUE, fig.cap='Boxplots, so hot right now!', fig.height=6, out.width="80%"}
-#trim whitespace
-par(mar=c(2,2,0,0))
-#plot boxplots
-boxplot(iris$Sepal.Width~iris$Species,
-        col = "#008080", 
-        border = "#0b4545",
-        ylab = "Sepal Width (cm)",
-        xlab = "Species")
-```
-
-How about a neat table of data? See, Table \@ref(tab:iristable):
-
-```{r, iristable}
-knitr::kable(
-  iris[1:15,1:5], format = "html",
-  caption = "A table made with the **knitr::kable** function.",
-  align = "c", col.names = c("Sepal <br> Length",
-                             "Sepal <br> Width",
-                             "Petal <br> Length",
-                             "Petal <br> Width",
-                             "Species"),
-  escape = FALSE)
-```
+Urna nunc id cursus metus aliquam. Sed faucibus turpis in eu mi. Habitasse platea dictumst vestibulum rhoncus est pellentesque. Viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat. Justo donec enim diam vulputate ut pharetra sit amet aliquam. Vel risus commodo viverra maecenas accumsan lacus. Semper auctor neque vitae tempus. Cras semper auctor neque vitae tempus quam. Donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Risus pretium quam vulputate dignissim suspendisse.
 
 # References
