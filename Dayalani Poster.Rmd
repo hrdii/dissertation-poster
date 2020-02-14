@@ -2,7 +2,7 @@
 main_topsize: 0.2 #percent coverage of the poster
 main_bottomsize: 0.1
 #ESSENTIALS
-title: ''
+title: 'TODO: Flesh out methods section + diagram model + Add end section tying to local'
 author:
   - name: '**Hardika Dayalani**'
     affil: 1
@@ -11,7 +11,7 @@ author:
 affiliation:
   - num: 1
     address: Pardee RAND Graduate School, Santa Monica CA  
-main_findings: "**Cities** as Transient Destinations: Implications of **Climate Change** on **Seasonal Migrants** in **India**"
+main_findings: "**Cities** as Transient Destinations: Implications of **Climate Change** on **Seasonal Internal Migrants**"
 main_fontfamily: "Roboto"  
 logoright_name: ./images/Capture.PNG
 primary_colour: "#4B197C"
