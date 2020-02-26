@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Dayalani-Poster.utf8</title>
+
+<script src="index_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="index_files/viz-1.8.2/viz.js"></script>
+<link href="index_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="index_files/grViz-binding-1.0.5/grViz.js"></script>
+
+
+
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
+
+<!--
+Here are the required style attributes for css to make this poster work :)
+-->
+<style>
+@page {
+size: 36in 48in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0px;
+padding: 0px;
+width: 36in;
+height: 48in;
+text-align: justify;
+font-size: 45px;
+line-height: 1.05;
+}
+/* RMarkdown Class Styles */
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
+padding: 4mm;
+width: 75%;
+margin: auto;
+margin-top: 1em;
+margin-bottom: 1em;
+/* align-items: center; */
+}
+code.sourceCode.r{
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+code {
+font-size: 25pt;
+font-family: monospace;
+background-color: #4B197C24;
+color: #4B197C;
+padding: 1.2mm;
+line-height: 1;
+border-radius: 2mm;
+}
+caption {
+margin-bottom: 10px;
+font-size: 20pt;
+font-style: italic;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #4B197C20;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+  border-spacing: 0;
+  font-size: 40%;
+  border-style: none;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 1em;
+  padding-left: 1em;
+  line-height: 1em;
+}
+table {
+  margin: auto;
+}
+th {
+  padding-left: 5mm;
+  padding-right: 5mm;
+}
+.caption {
+font-size: 20pt;
+font-style: italic;
+padding-top: 0;
+}
+.references {
+font-size: 20px;
+line-height: 90%;
+}
+/* Create three unequal columns that floats next to each other */
+.column {
+float: left;
+padding: 0px;
+}
+.outer {
+width: 36in;
+height: calc(48in *  (1 - 0.2 - 0.1 - 0.01) );
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+column-gap: 0;
+padding-left: 0cm;
+padding-right: 0cm;
+/* -webkit-column-rule-width: 50%;
+-moz-column-rule-width: 50%;
+column-rule-width: 50%; */
+-webkit-column-rule-style: none;
+-moz-column-rule-style: none;
+column-rule-style: none;
+-webkit-column-rule-color: black;
+-moz-column-rule-color: black;
+column-rule-color: black;
+background-color: #ffffff;
+font-family: Rasa;
+margin-top: calc(48in *  0.2 );
+padding-top: 1em;
+padding-bottom: 1em;
+}
+span.citation {
+  color: #4B197C;
+  font-weight: bold;
+}
+a {
+text-decoration: none;
+color: #4B197C;
+}
+#title {
+font-size: 125pt;
+text-align: left;
+margin: 0;
+line-height: 98%;
+border-bottom: 0;
+font-weight: normal;
+background: 0;
+}
+#author {
+color: #4B197C;
+margin: 0;
+line-height: 85%;
+font-size: 1.17em;
+}
+#affiliation {
+padding-top: 0.1em;
+color: ;
+font-style: italic;
+font-size: 25px;
+margin: 0;
+}
+sup {
+color: #D1A021;
+}
+.affiliation sup {
+font-size: 20px;
+}
+.author {
+text-align: left;
+}
+.author sup {
+font-size: 30px;
+}
+.author_extra {
+color: #4B197C;
+margin: 0;
+line-height: 85%;
+font-size: 35px;
+text-align: left;
+}
+.outer h1, h2, h3, h4, h5, h6 {
+text-align: center;
+margin: 0;
+font-weight: bold;
+}
+.section h1 {
+  text-align:center;
+  padding-bottom:5px;
+  background:
+    linear-gradient(
+      to left,
+      #ffffff 1%,
+      #ffffff 20%,
+      #4B197C75 33%,
+      #4B197C 50%,
+      #4B197C75 66%,
+      #ffffff 80%,
+      #ffffff 99%
+    )
+    left
+    bottom
+    #ffffff
+    no-repeat;
+  background-size:100% 5px ;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.outer h2 {
+text-align: center;
+}
+.outer p, .level2 {
+color: #000000;
+}
+.outer ol {
+padding-left: 8%;
+padding-right: 8%;
+text-align: left;
+}
+.main {
+width: 36in;
+height: calc(48in * 0.2);
+position: absolute;
+background-color: #4B197C;
+color: #ffffff90;
+font-family: Roboto;
+background-image: linear-gradient(#4B197C 50%,#4B197C);
+}
+.main strong {
+color: #ffffff;
+}
+.main strong > sup {
+color: #ffffff;
+}
+.main sup {
+color: #ffffff90;
+}
+#main-img-left {
+width: 10%;
+left: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+#main-img-center {
+width: 10%;
+left: calc(36in * 0.45);
+bottom: 0.5in;
+position: absolute;
+}
+#main-img-right {
+width: 10%;
+right: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+.main p {
+font-size: 150px;
+font-family: Roboto;
+text-align: center;
+margin: 0;
+position: absolute;
+top: 50%;
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+margin-left: 1em;
+}
+.fab {
+color: #00000030;
+font-size: 25px;
+}
+.twitter, i {
+color: #00000030;
+font-size: 35px;
+text-decoration: none;
+}
+a.email {
+text-decoration: none;
+color: #00000030;
+font-size: 35px;
+}
+.envelope {
+color: #00000030;
+font-size: 5px;
+text-decoration: none;
+}
+.poster_wrap {
+width: 36in;
+height: 48in;
+padding: 0cm;
+}
+.main_bottom {
+width: 36in;
+height: calc(48in * 0.1);
+margin-top: calc(48in * (1 - 0.1));
+position: absolute;
+background-color: #4B197C;
+background-image: linear-gradient(#4B197C 10%, #4B197C);
+}
+.section {
+  padding-left: 10mm;
+  padding-right: 10mm;
+}
+span > #tab:mytable {
+  font-weight: bold;
+}
+.orcid img {
+  width: 3%;
+}
+.emphasis {
+  background-color: #008080;
+  color: #ffffff;
+  border: solid #0b2045 3mm;
+  margin: 1em;
+  padding-left: 0;
+  padding-right: 0;
+}
+.emphasis h1 {
+  font-weight: bold;
+  background: none;
+  background-color: #0b2045;
+  padding-bottom: 5mm;
+  padding-top: 1mm;
+  margin-top: -1mm;
+  margin-right: -1mm;
+  margin-left: -1mm;
+}
+.emphasis blockquote {
+  border: 0;
+}
+.emphasis ol {
+  padding: 0;
+  padding-left: 8%;
+  font-size: 100%;
+  font-weight: bold;
+}
+.emphasis p {
+  color: #ffffff;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+
+<div class="column outer">
+<div class="section">
+
+<h3 id="author" class="author">
+
+<strong>Hardika Dayalani</strong><sup> 1</sup><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:dayalani@rand.org" class="email">dayalani@rand.org</a> <br>
+</h3>
+
+<h5 id="author_extra", class="author_extra">
+</h5>
+
+
+<p id="affiliation" class="affiliation">
+<sup>1</sup> Pardee RAND Graduate School, Santa Monica CA
+</p>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Every year millions of workers in India migrate for a few months within the country looking for work. A push factor driving this migration is rural economic distress <span class="citation">(Breman <a href="#ref-breman1978seasonal" role="doc-biblioref">1978</a>)</span>. Whereas pull factors include the desire to experience a more <em>urban</em> lifestyle <span class="citation">(Deshingkar <a href="#ref-deshingkar2017towards" role="doc-biblioref">2017</a>)</span>. Keshri and Bhagat show that seasonal migrants are more likely to belong to marginalized groups <span class="citation">(<a href="#ref-keshri2012" role="doc-biblioref">2012</a>)</span>.</p>
+</div>
+<div id="why-do-i-care" class="section level1">
+<h1>Why Do I Care?</h1>
+<ol style="list-style-type: decimal">
+<li>Marginalized &amp; more vulnerable to effects of Climate Change</li>
+<li>Drivers economic growth of destination cities</li>
+<li>Severely under-counted &amp; absent from policy discourse</li>
+</ol>
+<div class="figure" style="text-align: center"><span id="fig:genderfigure"></span>
+<img src="index_files/figure-html/genderfigure-1.png" alt="Majority of Seasonal Migrants are men migrating from rural areas to urban areas." width="100%" />
+<p class="caption">
+Figure 1: Majority of Seasonal Migrants are men migrating from rural areas to urban areas.
+</p>
+</div>
+Figures <a href="#fig:genderfigure">1</a> &amp; <a href="#fig:marginfigure">2</a> show the characteristics of the seasonal migrant population based on National Sample Survey Office data collected in 2007-08
+<div class="figure" style="text-align: center"><span id="fig:marginfigure"></span>
+<img src="index_files/figure-html/marginfigure-1.png" alt="Migration rates are higher marginalized and/or vulnerable groups" width="100%" />
+<p class="caption">
+Figure 2: Migration rates are higher marginalized and/or vulnerable groups
+</p>
+</div>
+</div>
+<div id="research-question" class="section level1">
+<h1>Research Question</h1>
+<ol style="list-style-type: decimal">
+<li>Climate Change will lead to variability in weather patterns. How will seasonal migration patters adapt in response to uncertainty in the agrarian economy?<br />
+</li>
+<li>How will the pattern of urbanization change with change in migration patterns?</li>
+<li>What are the barriers seasonal migrants face to getting services when they migrate?</li>
+<li>What policy solutions will empower migrants to access their entitlements irrespective of their location?</li>
+</ol>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="htmlwidget-e847a03b63e13e2ebece" style="width:100%;height:576px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e847a03b63e13e2ebece">{"x":{"diagram":"digraph G {\nrankdir=LR\ngraph[bgcolor = \"#FFFFFF\"]\n      node[fontname = \"helvetica\", width = 1.5, height = 0.5, fontsize=20]\n      \n      subgraph cluster_input {\n        node [shape=box,style=filled];\n        label = \"Inputs\";\n        style=dashed;\n        color= \"#4B197C\";\n        fontname = \"helvetica-bold\";\n        fontsize=20;\n        \n        node [shape=box, style=filled, color= \"#4B197C\", fillcolor = \"#caa7ed\"];\n        a0[label = \"Variability in \n Climate Patterns\"]\n        a1[label = \"Demographic \n Data\"]\n        a2[label = \"Economic Data\"]\n        a3[label = \"Geographic \n Distance\"]\n        a4[label = \"Cultural \n Similarity\"]\n        a5[label = \"Social Media \n mobility data\"]\n      }\n      \n      subgraph cluster_model {\n        style=invis;\n        fontname = \"helvetica-bold\";\n        node [shape=box, style=filled, color= \"#8e5c4e\", fillcolor = \"#d7bdb6\"];\n        s0[style=invis]\n        s1[style=invis]\n        s2[label = \"\n \n \n Decision Model \n \n \n \n\"]\n        s3[style=invis]\n        s4[style=invis]\n        s5[style=invis]\n        \n      }\n      \n      subgraph cluster_output {\n        node [shape=box,style=filled];\n        label = \"Outputs\";\n        style=dashed;\n        color= \"#d1a021\";\n        fontname = \"helvetica-bold\";\n        fontsize=20\n        \n        node [shape=box, style=filled, color= \"#d1a021\", fillcolor = \"#f0d99f\"];\n        b0[style=invis]\n        b1[label = \"Urban \n Growth\"]\n        b2[label = \"Duration of \n Migration\"]\n        b3[label = \"Demographic \n Characteristics\"]\n        b4[style=invis]\n        b5[style=invis]\n        \n      }\n      \n      edge[color = \"#8e5c4e\"]\n      a2 -> s2 -> b2\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>The migration model outlined above will incorporate push and pull factors influencing migration. A non-exhaustive list of factors include:</p>
+<ul>
+<li>Geographic and temporal variation in weather patterns
+<ul>
+<li>Length of dry season</li>
+<li>Severity of dry season</li>
+<li>Beginning of monsoon season</li>
+<li>Distribution of precipitation</li>
+</ul></li>
+<li>Geographic distribution of demographic data
+<ul>
+<li>Age of migrant</li>
+<li>Sex of migrant</li>
+<li>Economic quintiles</li>
+<li>Educational Attainment</li>
+<li>Membership in marginalized social groups</li>
+</ul></li>
+<li>State-level economic parameters
+<ul>
+<li>GDP per capita</li>
+<li>Rural male unemployment rate</li>
+<li>Size of informal labour force as a proportion of total urban labour force</li>
+</ul></li>
+<li>Inter-state distance</li>
+<li>Cultural similarity
+<ul>
+<li>Measured through phylogenic linguistic trees for major state language</li>
+</ul></li>
+<li>Social media data
+<ul>
+<li>Build a database by querying Facebook’s marketing API for monthly and daily active users that meet migration criteria.</li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span id="fig:citiesmap"></span>
+<img src="index_files/figure-html/citiesmap-1.png" alt="Population Growth in Large Indian Cities, Source @united2018world" width="100%" />
+<p class="caption">
+Figure 3: Population Growth in Large Indian Cities, Source <span class="citation">United Nations Population Division (<a href="#ref-united2018world" role="doc-biblioref">2018</a>)</span>
+</p>
+</div>
+<p>The output will be a dashboard similar to Figure <a href="#fig:citiesmap">3</a> that will visualize urban growth. The model outputs will also include change in migration characteristics like duration and demographic make-up like family characteristics.</p>
+</div>
+<div id="global-implications" class="section level1">
+<h1>Global Implications</h1>
+<ol style="list-style-type: decimal">
+<li>US has a sizable seasonal workforce that works in food production in different parts of the country at different times.<br />
+</li>
+<li>Climate Change will affect growing seasons and hence, seasonal labor demand everywhere.<br />
+</li>
+<li>Labor force in cities will be affected by surplus and / or scarcity of migrant workers.</li>
+</ol>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-R-rmarkdown">
+<p>Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, Winston Chang, and Richard Iannone. 2019. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
+</div>
+<div id="ref-R-magrittr">
+<p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr">https://CRAN.R-project.org/package=magrittr</a>.</p>
+</div>
+<div id="ref-breman1978seasonal">
+<p>Breman, Jan. 1978. “Seasonal Migration and Co-Operative Capitalism: Crushing of Cane and of Labour by Sugar Factories of Bardoli.” <em>Economic and Political Weekly</em>, 1317–60.</p>
+</div>
+<div id="ref-R-tidygeocoder">
+<p>Cambon, Jesse. 2019. <em>Tidygeocoder: Tidyverse-Style Interface for Geocoding</em>. <a href="https://CRAN.R-project.org/package=tidygeocoder">https://CRAN.R-project.org/package=tidygeocoder</a>.</p>
+</div>
+<div id="ref-deshingkar2017towards">
+<p>Deshingkar, Priya. 2017. “Towards Contextualised, Disaggregated and Intersectional Understandings of Migration in India.” <em>Asian Population Studies</em> 13 (2): 119–23.</p>
+</div>
+<div id="ref-keshri2012">
+<p>Keshri, Kunal, and R B Bhagat. 2012. “Temporary and Seasonal Migration: Regional Pattern, Characteristics and Associated Factors.” <em>Economic and Political Weekly</em> 47 (4): 81–88. <a href="http://www.jstor.org/stable/41419769">http://www.jstor.org/stable/41419769</a>.</p>
+</div>
+<div id="ref-R-sf">
+<p>Pebesma, Edzer. 2019. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf">https://CRAN.R-project.org/package=sf</a>.</p>
+</div>
+<div id="ref-R-base">
+<p>R Core Team. 2019. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+</div>
+<div id="ref-R-ggrepel">
+<p>Slowikowski, Kamil. 2019. <em>Ggrepel: Automatically Position Non-Overlapping Text Labels with ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggrepel">https://CRAN.R-project.org/package=ggrepel</a>.</p>
+</div>
+<div id="ref-R-rnaturalearthdata">
+<p>South, Andy. 2017a. <em>Rnaturalearthdata: World Vector Map Data from Natural Earth Used in ’Rnaturalearth’</em>. <a href="https://CRAN.R-project.org/package=rnaturalearthdata">https://CRAN.R-project.org/package=rnaturalearthdata</a>.</p>
+</div>
+<div id="ref-R-rnaturalearth">
+<p>———. 2017b. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.</p>
+</div>
+<div id="ref-R-posterdown">
+<p>Thorne, Brent. 2019. <em>Posterdown: Generate Pdf Conference Posters Using R Markdown</em>. <a href="https://CRAN.R-project.org/package=posterdown">https://CRAN.R-project.org/package=posterdown</a>.</p>
+</div>
+<div id="ref-united2018world">
+<p>United Nations Population Division. 2018. “World Urbanization Prospects: The 2018 Revision.”</p>
+</div>
+<div id="ref-R-readxl">
+<p>Wickham, Hadley, and Jennifer Bryan. 2019. <em>Readxl: Read Excel Files</em>. <a href="https://CRAN.R-project.org/package=readxl">https://CRAN.R-project.org/package=readxl</a>.</p>
+</div>
+<div id="ref-R-ggplot2">
+<p>Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen, Kohske Takahashi, Claus Wilke, Kara Woo, and Hiroaki Yutani. 2019. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>.</p>
+</div>
+<div id="ref-R-scales">
+<p>Wickham, Hadley, and Dana Seidel. 2019. <em>Scales: Scale Functions for Visualization</em>. <a href="https://CRAN.R-project.org/package=scales">https://CRAN.R-project.org/package=scales</a>.</p>
+</div>
+<div id="ref-R-cowplot">
+<p>Wilke, Claus O. 2019. <em>Cowplot: Streamlined Plot Theme and Plot Annotations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=cowplot">https://CRAN.R-project.org/package=cowplot</a>.</p>
+</div>
+<div id="ref-R-knitr">
+<p>Xie, Yihui. 2020. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.</p>
+</div>
+<div id="ref-R-pagedown">
+<p>Xie, Yihui, Romain Lesur, and Brent Thorne. 2020. <em>Pagedown: Paginate the Html Output of R Markdown with Css for Print</em>. <a href="https://CRAN.R-project.org/package=pagedown">https://CRAN.R-project.org/package=pagedown</a>.</p>
+</div>
+</div>
+</div>
+
+</div>
+<div class="main">
+<p><strong>Cities</strong> as Transient Destinations: Implications of <strong>Climate Change</strong> on <strong>Seasonal Internal Migrants</strong></p>
+</div>
+<div class="main_bottom">
+<img id="main-img-left" src=./images/chart.png>
+<img id="main-img-center" src=>
+<img id="main-img-right" src=./images/Capture.PNG>
+</div>
+</div>
+
+
+
+</body>
+</html>
