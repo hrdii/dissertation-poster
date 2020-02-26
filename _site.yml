@@ -8,5 +8,4 @@ navbar:
   - text: "Dissertation Poster"
     href: Dayalani-Poster.html
 output:
-  html_document:
-
+  html_document
