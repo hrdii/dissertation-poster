@@ -1,0 +1,13 @@
+name: "HD"
+output_dir: "docs"
+navbar:
+  title: "HD"
+  left:
+  - text: "Home"
+   href: index.html
+  - text: "Dissertation Poster"
+   href: Dayalani-Poster.html
+output:
+  html_document:
+ theme: cosmo
+
