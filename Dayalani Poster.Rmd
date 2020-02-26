@@ -2,7 +2,7 @@
 main_topsize: 0.2 #percent coverage of the poster
 main_bottomsize: 0.1
 #ESSENTIALS
-title: 'TODO: Flesh out methods section + diagram model + Add end section tying to local'
+title: ''
 author:
   - name: '**Hardika Dayalani**'
     affil: 1
@@ -12,7 +12,7 @@ affiliation:
   - num: 1
     address: Pardee RAND Graduate School, Santa Monica CA  
 main_findings: "**Cities** as Transient Destinations: Implications of **Climate Change** on **Seasonal Internal Migrants**"
-main_fontfamily: "Roboto"  
+main_fontfamily: "Roboto" 
 logoright_name: ./images/Capture.PNG
 logoleft_name: ./images/chart.png
 primary_colour: "#4B197C"
@@ -42,19 +42,21 @@ library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(ggrepel)
-# library(leaflet)
-# library(sp)
-# library(rgeos)
+library(DiagrammeR)
+
 ## Set Environment Options 
 knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       tidy = FALSE,
                       message = FALSE,
                       fig.align = 'center',
-                      out.width = "100%")
-options(knitr.table.format = "html") 
+                      out.width = "100%",
+                      dev.args=list(pointsize=20))
+options(knitr.table.format = "html")
+
 ## write the bibligraphy 
 knitr::write_bib(c(.packages(), 'posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+
 # merge the other references and the packages references
 cat(paste("% Automatically generated", Sys.time()), "\n% DO NOT EDIT",
     { readLines("biblo.bib") %>% 
@@ -73,15 +75,14 @@ nocite: |
 
 # Introduction
 
-Every year millions of workers in India migrate for a few months within the country looking for work. A push factor driving this migration is rural economic distress [@breman1978seasonal]. Whereas pull factors include the desire to experience a more *urban* lifestyle [@deshingkar2017towards]. Keshri and Bhagat show that seasonal migrants are more likely to belong to marginaized groups [-@keshri2012]. 
+Every year millions of workers in India migrate for a few months within the country looking for work. A push factor driving this migration is rural economic distress [@breman1978seasonal]. Whereas pull factors include the desire to experience a more *urban* lifestyle [@deshingkar2017towards]. Keshri and Bhagat show that seasonal migrants are more likely to belong to marginalized groups [-@keshri2012]. 
 
 # Why Do I Care?  
 
 1. Marginalized & more vulnerable to effects of Climate Change
 2. Drivers economic growth of destination cities
-3. Severly undercounted & absent from policy discourse
+3. Severely under-counted & absent from policy discourse
 
-Figures \@ref(fig:genderfigure) & \@ref(fig:marginfigure) show the charateristics of the seasonal migrant population based on National Sample Survey Office data collected in 2007-08 
 ```{r, genderfigure, fig.cap= "Majority of Seasonal Migrants are men migrating from rural areas to urban areas."}
 ## Data from Keshri Paper
 A <- matrix(c(0.67, 0.25, 0.4, 0.52), 2, 2)
@@ -117,6 +118,7 @@ ggplot(df1,
                      labels = scales::percent,
                      minor_breaks = FALSE)+xlab("")+theme_bw()
 ```
+Figures \@ref(fig:genderfigure) & \@ref(fig:marginfigure) show the characteristics of the seasonal migrant population based on National Sample Survey Office data collected in 2007-08 
 ```{r, marginfigure, fig.height=6, fig.cap= "Migration rates are higher marginalized and/or vulnerable groups"}
 ## Create Dataframes based on Keshri Paper
 ## Economic Quintiles
@@ -191,20 +193,101 @@ plot_grid(p2, p3, p4, nrow = 3, align = "v")
 
 # Research Question  
 
-1. Climate Change will lead to variability in weather patterns. How will seasonal migrantion patters adapt in response to uncertainity in the agrarian economy?  
+1. Climate Change will lead to variability in weather patterns. How will seasonal migration patters adapt in response to uncertainty in the agrarian economy?  
 2. How will the pattern of urbanization change with change in migration patterns?
 3. What are the barriers seasonal migrants face to getting services when they migrate?
 4. What policy solutions will empower migrants to access their entitlements irrespective of their location?
 
-# Methods
+# Methods  
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vel orci porta non pulvinar. Aliquam purus sit amet luctus venenatis. Ridiculus mus mauris vitae ultricies leo integer malesuada nunc vel. Tristique sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula. Adipiscing tristique risus nec feugiat. Ridiculus mus mauris vitae ultricies leo integer. Condimentum lacinia quis vel eros donec. Odio euismod lacinia at quis risus sed vulputate. Donec adipiscing tristique risus nec feugiat in fermentum. Massa enim nec dui nunc mattis enim ut tellus. Ullamcorper morbi tincidunt ornare massa eget. Nec dui nunc mattis enim ut tellus elementum. Habitasse platea dictumst quisque sagittis purus sit. Libero id faucibus nisl tincidunt eget nullam non. Quis ipsum suspendisse ultrices gravida dictum fusce. Neque vitae tempus quam pellentesque nec nam. Diam phasellus vestibulum lorem sed risus ultricies tristique. Mattis nunc sed blandit libero volutpat sed cras ornare arcu.
+```{r, modeldiagram, fig.height=6}
+grViz("digraph G {
+rankdir=LR
+graph[bgcolor = '#FFFFFF']
+      node[fontname = 'helvetica', width = 1.5, height = 0.5, fontsize=20]
+      
+      subgraph cluster_input {
+        node [shape=box,style=filled];
+        label = '@@1';
+        style=dashed;
+        color= '#4B197C';
+        fontname = 'helvetica-bold';
+        fontsize=20;
+        
+        node [shape=box, style=filled, color= '#4B197C', fillcolor = '#caa7ed'];
+        a0[label = 'Variability in \n Climate Patterns']
+        a1[label = 'Demographic \n Data']
+        a2[label = 'Economic Data']
+        a3[label = 'Geographic \n Distance']
+        a4[label = 'Cultural \n Similarity']
+        a5[label = 'Social Media \n mobility data']
+      }
+      
+      subgraph cluster_model {
+        style=invis;
+        fontname = 'helvetica-bold';
+        node [shape=box, style=filled, color= '#8e5c4e', fillcolor = '#d7bdb6'];
+        s0[style=invis]
+        s1[style=invis]
+        s2[label = '\n \n \n Decision Model \n \n \n \n']
+        s3[style=invis]
+        s4[style=invis]
+        s5[style=invis]
+        
+      }
+      
+      subgraph cluster_output {
+        node [shape=box,style=filled];
+        label = '@@3';
+        style=dashed;
+        color= '#d1a021';
+        fontname = 'helvetica-bold';
+        fontsize=20
+        
+        node [shape=box, style=filled, color= '#d1a021', fillcolor = '#f0d99f'];
+        b0[style=invis]
+        b1[label = 'Urban \n Growth']
+        b2[label = 'Duration of \n Migration']
+        b3[label = 'Demographic \n Characteristics']
+        b4[style=invis]
+        b5[style=invis]
+        
+      }
+      
+      edge[color = '#8e5c4e']
+      a2 -> s2 -> b2
+      }
 
-Aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus. Posuere lorem ipsum dolor sit. Vestibulum sed arcu non odio euismod lacinia. Amet massa vitae tortor condimentum lacinia quis. Ut venenatis tellus in metus. Varius morbi enim nunc faucibus a. Velit egestas dui id ornare arcu odio ut sem nulla. Massa vitae tortor condimentum lacinia quis vel eros donec ac. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Sit amet est placerat in egestas erat imperdiet sed. At consectetur lorem donec massa sapien.
+[1]: 'Inputs'
+[2]: ''
+[3]: 'Outputs'
+")
+```
 
-Iaculis at erat pellentesque adipiscing. Senectus et netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus est. Egestas dui id ornare arcu odio ut. Tristique magna sit amet purus gravida. Fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis. Amet commodo nulla facilisi nullam vehicula ipsum. Risus in hendrerit gravida rutrum quisque. Nulla posuere sollicitudin aliquam ultrices. Sed risus ultricies tristique nulla aliquet enim. Et molestie ac feugiat sed.
+The migration model outlined above will incorporate push and pull factors influencing migration. A non-exhaustive list of factors include:  
 
-```{r, citiesmap, fig.cap="Source @united2018world"}
+- Geographic and temporal variation in weather patterns
+  - Length of dry season
+  - Severity of dry season
+  - Beginning of monsoon season
+  - Distribution of precipitation
+- Geographic distribution of demographic data
+  - Age of migrant
+  - Sex of migrant
+  - Economic quintiles
+  - Educational Attainment
+  - Membership in marginalized social groups
+- State-level economic parameters
+  - GDP per capita
+  - Rural male unemployment rate
+  - Size of informal labour force as a proportion of total urban labour force
+- Inter-state distance
+- Cultural similarity
+  - Measured through phylogenic linguistic trees for major state language
+- Social media data
+  - Build a database by querying Facebook's marketing API for monthly and daily active users that meet migration criteria. 
+
+```{r, citiesmap, fig.height=6, fig.cap="Population Growth in Large Indian Cities, Source @united2018world"}
 ## Load Cities data
 load("../Cities.RData")
 cities$city_name <- gsub(" \\(*.*", "", cities$city_name)
@@ -216,7 +299,7 @@ india <- ne_countries(scale = "medium",
 cols3 <- colorRampPalette(c("#4B197C", "#D1A021"))(3)
 ## Plot
 ggplot()+
-  geom_sf(data = india, color = gray(.2))+
+  geom_sf(data = india, color = gray(.7))+
   coord_sf(xlim = c(68.1766451354, 97.4025614766), 
            ylim = c(7.96553477623, 35.4940095078))+
   geom_point(data = cities, 
@@ -251,9 +334,11 @@ ggplot()+
 
 ```
 
+The output will be a dashboard similar to Figure \@ref(fig:citiesmap) that will visualize urban growth. The model outputs will also include change in migration characteristics like duration and demographic make-up like family characteristics.  
+
 # Global Implications   
 
-1. US has a sizeable seasonal workforce that works in food production in different parts of the country at differnt times.  
+1. US has a sizable seasonal workforce that works in food production in different parts of the country at different times.  
 2. Climate Change will affect growing seasons and hence, seasonal labor demand everywhere.  
 3. Labor force in cities will be affected by surplus and / or scarcity of migrant workers.  
 
