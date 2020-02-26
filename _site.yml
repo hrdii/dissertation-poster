@@ -4,10 +4,9 @@ navbar:
   title: "HD"
   left:
   - text: "Home"
-   href: index.html
+    href: index.html
   - text: "Dissertation Poster"
-   href: Dayalani-Poster.html
+    href: Dayalani-Poster.html
 output:
   html_document:
- theme: cosmo
 
