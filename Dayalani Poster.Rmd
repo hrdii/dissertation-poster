@@ -14,6 +14,7 @@ affiliation:
 main_findings: "**Cities** as Transient Destinations: Implications of **Climate Change** on **Seasonal Internal Migrants**"
 main_fontfamily: "Roboto"  
 logoright_name: ./images/Capture.PNG
+logoleft_name: ./images/chart.png
 primary_colour: "#4B197C"
 secondary_colour: "#4B197C"
 accent_colour: "#D1A021"
@@ -37,9 +38,13 @@ library(knitr)
 library(magrittr)
 library(readxl)
 library(tidygeocoder)
-library(leaflet)
-library(sp)
-library(rgeos)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(ggrepel)
+# library(leaflet)
+# library(sp)
+# library(rgeos)
 ## Set Environment Options 
 knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
@@ -199,31 +204,57 @@ Aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus. Posuere lor
 
 Iaculis at erat pellentesque adipiscing. Senectus et netus et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus est. Egestas dui id ornare arcu odio ut. Tristique magna sit amet purus gravida. Fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis. Amet commodo nulla facilisi nullam vehicula ipsum. Risus in hendrerit gravida rutrum quisque. Nulla posuere sollicitudin aliquam ultrices. Sed risus ultricies tristique nulla aliquet enim. Et molestie ac feugiat sed.
 
-```{r, leafletmap, fig.cap="Source UN Population Division"}
-## Load data
+```{r, citiesmap, fig.cap="Source @united2018world"}
+## Load Cities data
 load("../Cities.RData")
+cities$city_name <- gsub(" \\(*.*", "", cities$city_name)
+## Load India Shape file
+india <- ne_countries(scale = "medium",
+                      returnclass = "sf")
 
+## Create Color Palette
 cols3 <- colorRampPalette(c("#4B197C", "#D1A021"))(3)
-cities$size <- as.numeric(cities$mega)*5
-cities$color <- cols3[4 - as.numeric(cities$fast)]
+## Plot
+ggplot()+
+  geom_sf(data = india, color = gray(.2))+
+  coord_sf(xlim = c(68.1766451354, 97.4025614766), 
+           ylim = c(7.96553477623, 35.4940095078))+
+  geom_point(data = cities, 
+             mapping = aes(x = long, 
+                           y = lat, 
+                           size = mega, 
+                           color = fast), alpha = 0.9)+
+  geom_text_repel(data = cities[cities$mega == "10m+",],
+                  mapping = aes(x = long, 
+                                y = lat,
+                                label = city_name), 
+                  nudge_x = c(-6, 3, -3, 0.5, -3), 
+                  nudge_y = c(0.5, -0.5, 0.5, -2, -0.5))+
+  scale_size_manual(name = "Population",
+                    breaks = c("300k+", "1m+", "10m+"),
+                    values = c("300k+" = 2,
+                               "1m+" = 4,
+                               "10m+" = 8),
+                    labels = c("300k+" = "300k to 1 million", 
+                               "1m+" = "1 to 10 million", 
+                               "10m+" = "More than 10 million"))+
+  scale_color_manual(name = "Growth Rate",
+                     breaks = c("<2.5%", "2.5+%", "5+%"),
+                     values = c("<2.5%" = cols3[3], 
+                                "2.5+%" = cols3[2], 
+                                "5+%" = cols3[1]),
+                     labels = c("<2.5%" = "Less then 2.5%", 
+                                "2.5+%" = "2.5 - 5.0 %", 
+                                "5+%" = "More than 5.0 %"))+
+  ylab("")+xlab("")+theme_void()+theme(legend.position="bottom", legend.box = "vertical")+
+  guides(color = guide_legend(override.aes = list(size=4)))
 
-## Conver to Spatial Dataframe
-cities <- SpatialPointsDataFrame(coords = cities[, c("long", "lat")], 
-                                 data = cities[, !{names(cities) %in% c("long", "lat")}],
-                                 proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
-
-leaflet(width = 1000, height = 1000)%>%
-  addProviderTiles("Esri.WorldGrayCanvas")%>%
-  addCircleMarkers(data = cities,
-                   radius = ~size,
-                   color = ~color,
-                   popup = ~city_name,
-                   stroke = FALSE, 
-                   fillOpacity = 1)
 ```
 
-Pulvinar mattis nunc sed blandit libero volutpat. Euismod in pellentesque massa placerat. Pellentesque sit amet porttitor eget. Vulputate ut pharetra sit amet aliquam id diam maecenas ultricies. Consectetur adipiscing elit duis tristique. Enim lobortis scelerisque fermentum dui faucibus in. Quis commodo odio aenean sed adipiscing. Vivamus at augue eget arcu dictum. Turpis cursus in hac habitasse. Vitae suscipit tellus mauris a diam maecenas. Tellus pellentesque eu tincidunt tortor. Molestie at elementum eu facilisis sed odio.
+# Global Implications   
 
-Urna nunc id cursus metus aliquam. Sed faucibus turpis in eu mi. Habitasse platea dictumst vestibulum rhoncus est pellentesque. Viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat. Justo donec enim diam vulputate ut pharetra sit amet aliquam. Vel risus commodo viverra maecenas accumsan lacus. Semper auctor neque vitae tempus. Cras semper auctor neque vitae tempus quam. Donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Risus pretium quam vulputate dignissim suspendisse.
+1. US has a sizeable seasonal workforce that works in food production in different parts of the country at differnt times.  
+2. Climate Change will affect growing seasons and hence, seasonal labor demand everywhere.  
+3. Labor force in cities will be affected by surplus and / or scarcity of migrant workers.  
 
 # References
