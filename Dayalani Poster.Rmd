@@ -68,7 +68,7 @@ cat(paste("% Automatically generated", Sys.time()), "\n% DO NOT EDIT",
 
 ---
 nocite: |
-  @R-base, @R-cowplot, @R-ggplot2, @R-knitr,@R-magrittr, @R-pagedown, @R-posterdown, @R-rmarkdown, @R-scales
+  @R-base, @R-cowplot, @R-ggplot2, @R-ggrepel, @R-knitr, @R-magrittr, @R-pagedown, @R-posterdown, @R-readxl, @R-rmarkdown, @R-rnaturalearth, @R-rnaturalearthdata, @R-scales, @R-sf, @R-tidygeocoder
 ---
 
 # Introduction
