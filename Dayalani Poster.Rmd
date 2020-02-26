@@ -3,11 +3,6 @@ main_topsize: 0.2 #percent coverage of the poster
 main_bottomsize: 0.1
 #ESSENTIALS
 title: ''
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
-                    encoding=encoding,
-                    output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author:
   - name: '**Hardika Dayalani**'
     affil: 1
